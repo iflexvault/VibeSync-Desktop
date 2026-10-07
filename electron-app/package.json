@@ -74,7 +74,9 @@
                 "deb",
                 "snap"
             ],
-            "icon": "icon.png"
+            "icon": "icon.png",
+            "maintainer": "iFlexVault <iflexvault@gmail.com>",
+            "category": "AudioVideo"
         },
         "appImage": {
             "artifactName": "VibeSync-${version}-linux.${ext}"
