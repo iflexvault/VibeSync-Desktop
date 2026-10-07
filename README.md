@@ -62,7 +62,7 @@ Windows packages are attached to the matching VibeSync Desktop GitHub release:
 
 ```bash
 git clone https://github.com/iflexvault/VibeSync-Desktop.git
-cd VibeSync
+cd VibeSync-Desktop
 
 python -m venv venv
 # Windows PowerShell
@@ -77,14 +77,12 @@ npm start
 
 ## Windows release build
 
-The final Windows icon must come from the exact approved VibeSync logo. The
-original supplied logo is not currently present in this checkout, so the build
-intentionally refuses to package until the source PNG is supplied.
+The Windows icon is generated from the approved Android VibeSync launcher logo
+committed at `electron-app/build/vibesync-icon-source.png`.
 
-1. Place the approved transparent logo at `electron-app/build/vibesync-icon-source.png`.
-2. Run `npm run generate:icon`.
-3. Run `npm run validate:metadata` and `npm run validate:branding`.
-4. Run `npm run build` on Windows.
+1. Run `npm run generate:icon` if the ICO needs to be regenerated.
+2. Run `npm run validate:metadata` and `npm run validate:branding`.
+3. Run `npm run build` on Windows.
 
 The generated icon contains 16, 24, 32, 48, 64, 128 and 256 px layers with
 transparent padding. The release workflow builds x64 NSIS and portable assets
