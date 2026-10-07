@@ -7,6 +7,17 @@ const { execFile, spawn } = require('node:child_process');
 const APP_ID = 'pro.iflexvault.vibesync.desktop';
 const SERVER_URL = 'http://127.0.0.1:8000';
 const LEGACY_USER_DATA_DIRS = ['Airbeats', 'airbeats'];
+const LEGACY_MIGRATION_SKIP_NAMES = new Set([
+    'Cache',
+    'Cache_Data',
+    'Code Cache',
+    'GPUCache',
+    'DawnCache',
+    'Service Worker',
+    'SingletonCookie',
+    'SingletonLock',
+    'SingletonSocket'
+]);
 
 let mainWindow;
 let dynamicIslandWindow;
@@ -14,24 +25,55 @@ let serverProcess;
 
 app.setAppUserModelId(APP_ID);
 
+function migrateLegacyUserData(source, destination) {
+    let entries;
+
+    try {
+        fs.mkdirSync(destination, { recursive: true });
+        entries = fs.readdirSync(source, { withFileTypes: true });
+    } catch (error) {
+        console.warn('VibeSync could not inspect legacy user data:', error.code || error.message);
+        return;
+    }
+
+    for (const entry of entries) {
+        if (LEGACY_MIGRATION_SKIP_NAMES.has(entry.name)) continue;
+
+        const sourcePath = path.join(source, entry.name);
+        const destinationPath = path.join(destination, entry.name);
+
+        try {
+            if (entry.isDirectory()) {
+                migrateLegacyUserData(sourcePath, destinationPath);
+            } else if (entry.isFile() && !fs.existsSync(destinationPath)) {
+                fs.copyFileSync(sourcePath, destinationPath);
+            }
+        } catch (error) {
+            // Locked Chromium files should not prevent the application from opening.
+            console.warn(`VibeSync skipped legacy data ${entry.name}:`, error.code || error.message);
+        }
+    }
+}
+
 function configureUserDataDirectory() {
     const appData = app.getPath('appData');
     const userData = path.join(appData, 'VibeSync');
 
+    // Set the destination before migration so a partial migration is still usable.
+    app.setPath('userData', userData);
+
     // Keep existing Airbeats local data available after the application ID and
-    // product name change. The old directory is copied only when VibeSync has
-    // not created its own directory yet.
+    // product name change. Cache and locked session files are intentionally
+    // skipped because they can be unreadable while the old app is running.
     if (!fs.existsSync(userData)) {
         for (const legacyName of LEGACY_USER_DATA_DIRS) {
             const legacyPath = path.join(appData, legacyName);
             if (fs.existsSync(legacyPath)) {
-                fs.cpSync(legacyPath, userData, { recursive: true, errorOnExist: false });
+                migrateLegacyUserData(legacyPath, userData);
                 break;
             }
         }
     }
-
-    app.setPath('userData', userData);
 }
 
 configureUserDataDirectory();
