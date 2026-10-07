@@ -21,9 +21,13 @@ window.autoBackup = async function() {
         searchHistory: localStorage.getItem('searchHistory') || '[]',
         playedArtists: localStorage.getItem('playedArtists') || '[]',
         lastPlayedAlbum: localStorage.getItem('lastPlayedAlbum') || 'null',
-        airbeats_user_id: localStorage.getItem('airbeats_user_id') || '',
-        airbeats_user_name: localStorage.getItem('airbeats_user_name') || '',
-        airbeats_user_avatar: localStorage.getItem('airbeats_user_avatar') || ''
+        // Keep legacy cloud field names because existing Android accounts use them.
+        airbeats_user_id: window.VibeSyncIdentity.get('id'),
+        airbeats_user_name: window.VibeSyncIdentity.get('name'),
+        airbeats_user_avatar: window.VibeSyncIdentity.get('avatar'),
+        vibesync_user_id: window.VibeSyncIdentity.get('id'),
+        vibesync_user_name: window.VibeSyncIdentity.get('name'),
+        vibesync_user_avatar: window.VibeSyncIdentity.get('avatar')
     };
 
     try {
@@ -52,16 +56,19 @@ window.restoreFromCloud = async function(email) {
             if (data.searchHistory) localStorage.setItem('searchHistory', data.searchHistory);
             if (data.playedArtists) localStorage.setItem('playedArtists', data.playedArtists);
             if (data.lastPlayedAlbum) localStorage.setItem('lastPlayedAlbum', data.lastPlayedAlbum);
-            if (data.airbeats_user_id) localStorage.setItem('airbeats_user_id', data.airbeats_user_id);
-            if (data.airbeats_user_name) localStorage.setItem('airbeats_user_name', data.airbeats_user_name);
-            if (data.airbeats_user_avatar) localStorage.setItem('airbeats_user_avatar', data.airbeats_user_avatar);
+            const restoredId = data.vibesync_user_id || data.airbeats_user_id;
+            const restoredName = data.vibesync_user_name || data.airbeats_user_name;
+            const restoredAvatar = data.vibesync_user_avatar || data.airbeats_user_avatar;
+            if (restoredId) window.VibeSyncIdentity.set('id', restoredId);
+            if (restoredName) window.VibeSyncIdentity.set('name', restoredName);
+            if (restoredAvatar) window.VibeSyncIdentity.set('avatar', restoredAvatar);
             console.log('Restored from cloud!');
         } else {
             await window.autoBackup();
         }
         
         // Auto-onboard stats if missing
-        if (!localStorage.getItem('airbeats_user_name') && window._auth_provided_name) {
+        if (!window.VibeSyncIdentity.get('name') && window._auth_provided_name) {
             try {
                 const onboardRes = await fetch('/api/stats/onboard', {
                     method: 'POST',
@@ -70,9 +77,9 @@ window.restoreFromCloud = async function(email) {
                 });
                 const onboardData = await onboardRes.json();
                 if (onboardData.userId) {
-                    localStorage.setItem('airbeats_user_id', onboardData.userId);
-                    localStorage.setItem('airbeats_user_name', onboardData.name);
-                    localStorage.setItem('airbeats_user_avatar', onboardData.profileUrl);
+                    window.VibeSyncIdentity.set('id', onboardData.userId);
+                    window.VibeSyncIdentity.set('name', onboardData.name);
+                    window.VibeSyncIdentity.set('avatar', onboardData.profileUrl);
                     await window.autoBackup(); // save it to cloud immediately
                 }
             } catch (e) {
@@ -229,6 +236,7 @@ window.logoutUser = function() {
     localStorage.removeItem('user_playlists');
     localStorage.removeItem('saved_albums');
     localStorage.removeItem('subscribedArtists');
+    window.VibeSyncIdentity.clearAll();
     window.location.reload();
 };
 

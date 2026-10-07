@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, ipcMain, screen, shell } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, screen, session, shell } = require('electron');
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
@@ -6,6 +6,8 @@ const { execFile, spawn } = require('node:child_process');
 
 const APP_ID = 'pro.iflexvault.vibesync.desktop';
 const SERVER_URL = 'http://127.0.0.1:8000';
+const APP_PARTITION = 'persist:musicapp';
+const RENDERER_CACHE_VERSION = 'vibesync-branding-2';
 const LEGACY_USER_DATA_DIRS = ['Airbeats', 'airbeats'];
 const LEGACY_MIGRATION_SKIP_NAMES = new Set([
     'Cache',
@@ -77,6 +79,23 @@ function configureUserDataDirectory() {
 }
 
 configureUserDataDirectory();
+
+async function refreshRendererCache() {
+    const markerPath = path.join(app.getPath('userData'), '.vibesync-renderer-cache-version');
+
+    try {
+        if (fs.readFileSync(markerPath, 'utf8') === RENDERER_CACHE_VERSION) return;
+    } catch {
+        // The marker is created after the first successful cache refresh.
+    }
+
+    try {
+        await session.fromPartition(APP_PARTITION).clearCache();
+        fs.writeFileSync(markerPath, RENDERER_CACHE_VERSION, 'utf8');
+    } catch (error) {
+        console.warn('VibeSync could not refresh the renderer cache:', error.code || error.message);
+    }
+}
 
 function getServerPath() {
     if (app.isPackaged) {
@@ -150,7 +169,7 @@ function createMainWindow() {
             nodeIntegration: false,
             contextIsolation: true,
             preload: path.join(__dirname, 'preload.js'),
-            partition: 'persist:musicapp',
+            partition: APP_PARTITION,
             devTools: false
         }
     };
@@ -291,7 +310,8 @@ ipcMain.on('island-action', (_event, action) => {
     }
 });
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+    await refreshRendererCache();
     app.on('browser-window-created', (_event, window) => {
         window.setMenu(null);
         window.webContents.on('before-input-event', (event, input) => {

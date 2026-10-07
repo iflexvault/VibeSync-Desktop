@@ -1,4 +1,4 @@
-﻿window.addEventListener('error', function(e) { if (e.target.tagName === 'IMG') { if (e.target.getAttribute('data-fallback-applied')) return; e.target.setAttribute('data-fallback-applied', 'true'); e.target.src = 'https://via.placeholder.com/150x150/1c1a1a/c6e355?text=Music'; } }, true);
+﻿window.addEventListener('error', function(e) { if (e.target.tagName === 'IMG') { if (e.target.getAttribute('data-fallback-applied')) return; e.target.setAttribute('data-fallback-applied', 'true'); e.target.src = 'https://via.placeholder.com/150x150/080a10/ffffff?text=VibeSync'; } }, true);
 
 
 window.getClickableArtistsHtml = function(song) {
@@ -2418,8 +2418,8 @@ async function renderSettingsAbout() {
                 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
             }
         </style>
-        <div style="width: 100px; height: 100px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; animation: logoPulse 2.5s infinite ease-in-out;">
-            <i class="fas fa-headphones" style="font-size: 40px; color: #111111;"></i>
+        <div style="width: 100px; height: 100px; border-radius: 28px; background: #080a10; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; animation: logoPulse 2.5s infinite ease-in-out; overflow: hidden;">
+            <img src="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png" alt="VibeSync logo" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
 
         <!-- App Name -->

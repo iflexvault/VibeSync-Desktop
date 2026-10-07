@@ -12,13 +12,13 @@
 
     // ==================== STORAGE HELPERS ====================
     function getUserId() {
-        return localStorage.getItem('airbeats_user_id') || '';
+        return window.VibeSyncIdentity.get('id');
     }
     function getUserName() {
-        return localStorage.getItem('airbeats_user_name') || '';
+        return window.VibeSyncIdentity.get('name');
     }
     function getUserAvatar() {
-        return localStorage.getItem('airbeats_user_avatar') || '';
+        return window.VibeSyncIdentity.get('avatar');
     }
 
     // ==================== WELCOME ONBOARDING MODAL ====================
@@ -83,9 +83,9 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    localStorage.setItem('airbeats_user_id', data.userId);
-                    localStorage.setItem('airbeats_user_name', data.name);
-                    localStorage.setItem('airbeats_user_avatar', data.profileUrl);
+                    window.VibeSyncIdentity.set('id', data.userId);
+                    window.VibeSyncIdentity.set('name', data.name);
+                    window.VibeSyncIdentity.set('avatar', data.profileUrl);
                     
                     modal.classList.add('fade-out');
                     setTimeout(() => {
@@ -247,7 +247,7 @@
                     body: JSON.stringify({ userId: getUserId(), name: sanitized, profileUrl: getUserAvatar() })
                 });
                 if (res.ok) {
-                    localStorage.setItem('airbeats_user_name', sanitized);
+                    window.VibeSyncIdentity.set('name', sanitized);
                     const nameEl = document.getElementById('profileDisplayName');
                     if (nameEl) nameEl.textContent = sanitized;
                     updateProfileIcon();
@@ -306,7 +306,7 @@
                     body: JSON.stringify({ userId: getUserId(), name: getUserName(), profileUrl: url })
                 });
                 if (res.ok) {
-                    localStorage.setItem('airbeats_user_avatar', url);
+                    window.VibeSyncIdentity.set('avatar', url);
                     const imgEl = document.getElementById('profileAvatarImg');
                     const placeholderEl = document.getElementById('profileAvatarPlaceholder');
                     if (imgEl) {
@@ -401,7 +401,7 @@
             const data = await res.json();
             if (data.success) {
                 // 1. Restore UUID
-                localStorage.setItem('airbeats_user_id', data.userId);
+                window.VibeSyncIdentity.set('id', data.userId);
                 
                 // 2. Restore History
                 if (data.history && Array.isArray(data.history)) {
