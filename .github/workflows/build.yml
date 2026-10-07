@@ -134,4 +134,8 @@ jobs:
       env:
         SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
       run: |
+        if [ -z "$SNAPCRAFT_STORE_CREDENTIALS" ]; then
+          echo "SNAPCRAFT_STORE_CREDENTIALS is not configured; skipping Snap Store upload."
+          exit 0
+        fi
         snapcraft upload electron-app/dist/*.snap --release=stable

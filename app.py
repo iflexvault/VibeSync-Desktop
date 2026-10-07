@@ -7,6 +7,7 @@ import uuid
 
 import os
 import sys
+import json
 
 # Load .env if it exists (for local development and GitHub Actions secrets)
 env_file = os.path.join(os.path.dirname(__file__), '.env')
@@ -24,6 +25,26 @@ if getattr(sys, 'frozen', False):
     app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 else:
     app = Flask(__name__)
+
+DESKTOP_APP_ID = 'pro.iflexvault.vibesync.desktop'
+DESKTOP_INSTANCE_ID = os.environ.get('VIBESYNC_INSTANCE_ID', '')
+DESKTOP_VERSION = os.environ.get('VIBESYNC_VERSION', '1.0.0')
+
+@app.route('/api/desktop/health')
+def desktop_health():
+    response = jsonify({
+        'appId': DESKTOP_APP_ID,
+        'instanceId': DESKTOP_INSTANCE_ID,
+        'version': DESKTOP_VERSION
+    })
+    response.headers['Cache-Control'] = 'no-store'
+    return response
+
+@app.after_request
+def prevent_stale_desktop_ui(response):
+    if request.path in ('/', '/mobile', '/api/desktop/health') or request.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'no-store'
+    return response
 
 @app.route('/')
 def index():
@@ -1024,5 +1045,19 @@ def auth_restore():
 # ------------------------------------
 
 if __name__ == '__main__':
-    print("Server started at http://127.0.0.1:8000")
-    app.run(host='127.0.0.1', port=8000, debug=False)
+    from werkzeug.serving import make_server
+
+    startup_file = os.environ.get('VIBESYNC_STARTUP_FILE')
+    port = int(os.environ.get('VIBESYNC_PORT', '0' if startup_file else '8000'))
+    server = make_server('127.0.0.1', port, app, threaded=True)
+    if startup_file:
+        temporary_file = startup_file + '.tmp'
+        with open(temporary_file, 'w', encoding='utf-8') as ready_file:
+            json.dump({
+                'appId': DESKTOP_APP_ID,
+                'instanceId': DESKTOP_INSTANCE_ID,
+                'port': server.server_port
+            }, ready_file)
+        os.replace(temporary_file, startup_file)
+    print(f"VibeSync server started at http://127.0.0.1:{server.server_port}")
+    server.serve_forever()

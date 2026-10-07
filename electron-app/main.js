@@ -1,13 +1,12 @@
 const { app, BrowserWindow, dialog, ipcMain, screen, session, shell } = require('electron');
 const fs = require('node:fs');
-const http = require('node:http');
 const path = require('node:path');
-const { execFile, spawn } = require('node:child_process');
+const { startBackend, stopBackend } = require('./backend-server');
 
 const APP_ID = 'pro.iflexvault.vibesync.desktop';
-const SERVER_URL = 'http://127.0.0.1:8000';
+const BACKEND_PORT = 38123;
 const APP_PARTITION = 'persist:musicapp';
-const RENDERER_CACHE_VERSION = 'vibesync-branding-2';
+const RENDERER_CACHE_VERSION = 'vibesync-isolated-backend-3';
 const LEGACY_USER_DATA_DIRS = ['Airbeats', 'airbeats'];
 const LEGACY_MIGRATION_SKIP_NAMES = new Set([
     'Cache',
@@ -24,8 +23,10 @@ const LEGACY_MIGRATION_SKIP_NAMES = new Set([
 let mainWindow;
 let dynamicIslandWindow;
 let serverProcess;
+let serverUrl;
 
 app.setAppUserModelId(APP_ID);
+app.setName('VibeSync');
 
 function migrateLegacyUserData(source, destination) {
     let entries;
@@ -105,43 +106,22 @@ function getServerPath() {
     return path.join(__dirname, '..', 'dist', 'server', 'server.exe');
 }
 
-function startServer(onReady) {
+async function startServer() {
     const serverPath = getServerPath();
-
+    let executable;
+    let args = [];
     if (fs.existsSync(serverPath)) {
-        serverProcess = spawn(serverPath, [], {
-            windowsHide: true,
-            stdio: 'ignore'
-        });
+        executable = serverPath;
     } else if (!app.isPackaged) {
-        const python = process.platform === 'win32' ? 'python' : 'python3';
-        serverProcess = spawn(python, [path.join(__dirname, '..', 'app.py')], {
-            windowsHide: true,
-            stdio: 'ignore'
-        });
+        executable = process.platform === 'win32' ? 'python' : 'python3';
+        args = [path.join(__dirname, '..', 'app.py')];
     } else {
-        console.error(`VibeSync server executable was not found at ${serverPath}`);
-        return;
+        throw new Error(`VibeSync server executable was not found at ${serverPath}`);
     }
 
-    serverProcess.on('error', (error) => {
-        console.error('Failed to start VibeSync server:', error);
-    });
-
-    const waitForServer = () => {
-        const request = http.get(SERVER_URL, (response) => {
-            response.resume();
-            if (response.statusCode === 200 || response.statusCode === 404) {
-                onReady();
-            } else {
-                setTimeout(waitForServer, 200);
-            }
-        });
-
-        request.on('error', () => setTimeout(waitForServer, 200));
-    };
-
-    waitForServer();
+    const backend = await startBackend({ executable, args, version: app.getVersion(), port: BACKEND_PORT });
+    serverProcess = backend.child;
+    serverUrl = backend.url;
 }
 
 function getIconPath() {
@@ -183,12 +163,12 @@ function createMainWindow() {
         return { action: 'deny' };
     });
     mainWindow.webContents.on('will-navigate', (event, url) => {
-        if (!url.startsWith(SERVER_URL)) {
+        if (new URL(url).origin !== serverUrl) {
             event.preventDefault();
             openExternalUrl(url);
         }
     });
-    void mainWindow.loadURL(SERVER_URL);
+    void mainWindow.loadURL(serverUrl);
 
     mainWindow.on('closed', () => {
         mainWindow = undefined;
@@ -248,13 +228,7 @@ function createDynamicIsland() {
 }
 
 function closeServer() {
-    if (!serverProcess || serverProcess.killed) return;
-
-    if (process.platform === 'win32' && serverProcess.pid) {
-        execFile('taskkill', ['/pid', String(serverProcess.pid), '/T', '/F'], () => {});
-    } else {
-        serverProcess.kill('SIGTERM');
-    }
+    stopBackend(serverProcess);
     serverProcess = undefined;
 }
 
@@ -320,10 +294,16 @@ app.whenReady().then(async () => {
             }
         });
     });
-    startServer(() => {
+    try {
+        await startServer();
         createMainWindow();
         createDynamicIsland();
-    });
+    } catch (error) {
+        console.error('Failed to start VibeSync backend:', error);
+        dialog.showErrorBox('VibeSync could not start', error.message);
+        app.quit();
+        return;
+    }
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createMainWindow();
