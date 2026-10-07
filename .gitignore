@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.env
+venv/
+
+electron-app/node_modules/
+electron-app/dist/

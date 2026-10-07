@@ -1,0 +1,107 @@
+{
+    "name": "vibesync-desktop",
+    "version": "1.0.0",
+    "description": "VibeSync desktop music client by iFlexVault.",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "validate:metadata": "node scripts/validate-metadata.js",
+        "validate:branding": "node scripts/validate-windows-icon.js",
+        "generate:icon": "node scripts/generate-windows-icon.mjs",
+        "build": "npm run validate:metadata && npm run validate:branding && electron-builder --win --publish never"
+    },
+    "build": {
+        "appId": "pro.iflexvault.vibesync.desktop",
+        "productName": "VibeSync",
+        "executableName": "VibeSync",
+        "buildNumber": "1",
+        "copyright": "Copyright © 2026 iFlexVault",
+        "publish": null,
+        "directories": {
+            "buildResources": "build"
+        },
+        "extraResources": [
+            {
+                "from": "../dist/server",
+                "to": "server",
+                "filter": [
+                    "**/*"
+                ]
+            }
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": ["x64"]
+                },
+                {
+                    "target": "portable",
+                    "arch": ["x64"]
+                }
+            ],
+            "icon": "build/vibesync.ico",
+            "requestedExecutionLevel": "asInvoker"
+        },
+        "nsis": {
+            "oneClick": false,
+            "perMachine": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": "always",
+            "createStartMenuShortcut": true,
+            "shortcutName": "VibeSync",
+            "license": "license.txt",
+            "artifactName": "VibeSync-Setup-${version}.${ext}",
+            "deleteAppDataOnUninstall": false,
+            "uninstallDisplayName": "VibeSync"
+        },
+        "portable": {
+            "artifactName": "VibeSync-${version}-portable.${ext}"
+        },
+        "mac": {
+            "target": [
+                "dmg"
+            ],
+            "icon": "icon.png"
+        },
+        "dmg": {
+            "artifactName": "VibeSync-${version}-mac.${ext}",
+            "title": "Install VibeSync"
+        },
+        "linux": {
+            "target": [
+                "AppImage",
+                "deb",
+                "snap"
+            ],
+            "icon": "icon.png"
+        },
+        "appImage": {
+            "artifactName": "VibeSync-${version}-linux.${ext}"
+        },
+        "deb": {
+            "artifactName": "VibeSync-${version}-linux.${ext}"
+        },
+        "snapcraft": {
+            "artifactName": "VibeSync-${version}-linux.${ext}",
+            "base": "core22"
+        }
+    },
+    "keywords": [],
+    "author": {
+        "name": "iFlexVault",
+        "url": "https://github.com/iflexvault"
+    },
+    "license": "ISC",
+    "type": "commonjs",
+    "devDependencies": {
+        "electron": "^43.0.0",
+        "electron-builder": "^26.15.3",
+        "sharp": "^0.34.3"
+    },
+    "homepage": "https://github.com/iflexvault/VibeSync-Desktop",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/iflexvault/VibeSync-Desktop.git"
+    }
+}
