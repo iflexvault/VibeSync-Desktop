@@ -8,7 +8,7 @@
         "validate:metadata": "node scripts/validate-metadata.js",
         "validate:branding": "node scripts/validate-windows-icon.js",
         "generate:icon": "node scripts/generate-windows-icon.mjs",
-        "build": "npm run validate:metadata && npm run validate:branding && electron-builder --win --publish never"
+        "build": "npm run validate:metadata && npm run validate:branding && electron-builder --win --publish never --config.forceCodeSigning=true"
     },
     "build": {
         "appId": "pro.iflexvault.vibesync.desktop",
