@@ -79,28 +79,11 @@ jobs:
         npm run generate:icon
         npm run validate:branding
 
-    - name: Configure Windows Authenticode signing
-      if: matrix.os == 'windows-latest'
-      shell: pwsh
-      env:
-        WINDOWS_CSC_CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CSC_CERTIFICATE_BASE64 }}
-        WINDOWS_CSC_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CSC_CERTIFICATE_PASSWORD }}
-      run: |
-        if ([string]::IsNullOrWhiteSpace($env:WINDOWS_CSC_CERTIFICATE_BASE64)) {
-          throw "WINDOWS_CSC_CERTIFICATE_BASE64 repository secret is required. Unsigned Windows installers are blocked by Smart App Control."
-        }
-        if ([string]::IsNullOrWhiteSpace($env:WINDOWS_CSC_CERTIFICATE_PASSWORD)) {
-          throw "WINDOWS_CSC_CERTIFICATE_PASSWORD repository secret is required."
-        }
-
-        $certificatePath = Join-Path $env:RUNNER_TEMP "vibesync-code-signing.pfx"
-        [IO.File]::WriteAllBytes($certificatePath, [Convert]::FromBase64String($env:WINDOWS_CSC_CERTIFICATE_BASE64))
-        "CSC_LINK=$certificatePath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        "CSC_KEY_PASSWORD=$env:WINDOWS_CSC_CERTIFICATE_PASSWORD" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
     - name: Build VibeSync app (Windows x64)
       if: matrix.os == 'windows-latest'
       working-directory: ./electron-app
+      env:
+        CSC_IDENTITY_AUTO_DISCOVERY: "false"
       run: npm run build
 
     - name: Build Electron app (macOS)

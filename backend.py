@@ -1,6 +1,5 @@
 from ytmusicapi import YTMusic
 from yt_dlp import YoutubeDL
-import requests
 import os
 import json
 import threading

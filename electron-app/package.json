@@ -8,7 +8,7 @@
         "validate:metadata": "node scripts/validate-metadata.js",
         "validate:branding": "node scripts/validate-windows-icon.js",
         "generate:icon": "node scripts/generate-windows-icon.mjs",
-        "build": "npm run validate:metadata && npm run validate:branding && electron-builder --win --publish never --config.forceCodeSigning=true"
+        "build": "npm run validate:metadata && npm run validate:branding && electron-builder --win --publish never"
     },
     "build": {
         "appId": "pro.iflexvault.vibesync.desktop",
@@ -62,7 +62,7 @@
             "target": [
                 "dmg"
             ],
-            "icon": "icon.png"
+            "icon": "build/vibesync-icon-source.png"
         },
         "dmg": {
             "artifactName": "VibeSync-${version}-mac.${ext}",
@@ -74,7 +74,7 @@
                 "deb",
                 "snap"
             ],
-            "icon": "icon.png",
+            "icon": "build/vibesync-icon-source.png",
             "maintainer": "iFlexVault <iflexvault@gmail.com>",
             "category": "AudioVideo"
         },

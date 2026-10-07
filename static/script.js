@@ -2527,7 +2527,7 @@ window.downloadCurrentSong = async function() {
         const btn = document.getElementById('downloadBtn');
         if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
         
-        const downloadUrl = `/api/stream?id=${track.id}`;
+        const downloadUrl = `/api/play_stream?id=${track.id}`;
         const filename = `${track.title} - ${track.subtitle || 'VibeSync'}.m4a`;
         
         if (window.electronDL && window.electronDL.downloadFile) {
@@ -3316,7 +3316,7 @@ document.getElementById('cm-download').addEventListener('click', async () => {
     
     if(window.showToast) window.showToast("Downloading " + ctxActiveData.title + "...");
     try {
-        const downloadUrl = `/api/stream?id=${ctxActiveData.id}`;
+        const downloadUrl = `/api/play_stream?id=${ctxActiveData.id}`;
         const filename = `${ctxActiveData.title} - VibeSync.m4a`;
         
         if (window.electronDL && window.electronDL.downloadFile) {

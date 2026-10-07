@@ -1,8 +1,7 @@
 import requests
-from flask import Flask, render_template, Response, request, jsonify
+from flask import Flask, render_template, request, jsonify
 import xml.etree.ElementTree as ET
 import re
-import math
 import random
 import uuid
 
@@ -427,7 +426,6 @@ def stats_update_profile():
 import zipfile
 import sqlite3
 import tempfile
-import os
 
 @app.route('/api/stats/restore_backup', methods=['POST'])
 def stats_restore_backup():

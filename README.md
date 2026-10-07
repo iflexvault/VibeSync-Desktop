@@ -89,28 +89,18 @@ transparent padding. The release workflow builds x64 NSIS and portable assets
 and publishes them using the repository `GITHUB_TOKEN`; no personal access
 token is required.
 
-### Windows Smart App Control and signing
+### Windows packaging and signing
 
-Windows Smart App Control blocks unsigned or untrusted desktop installers. The
-release workflow therefore requires an Authenticode PFX certificate before it
-builds Windows packages. Add these repository secrets before publishing a
-release:
+The release workflow builds both Windows packages without requiring a signing
+certificate, so the installer and portable executable are available even when
+no certificate secrets are configured. The Windows targets are:
 
-- `WINDOWS_CSC_CERTIFICATE_BASE64`: base64-encoded PFX/PKCS#12 certificate.
-- `WINDOWS_CSC_CERTIFICATE_PASSWORD`: password for that certificate.
+- `VibeSync-Setup-1.0.0.exe`
+- `VibeSync-1.0.0-portable.exe`
 
-The certificate should be issued by a trusted Windows code-signing authority
-for **iFlexVault**. Self-signed certificates and unsigned builds will not be
-accepted by Smart App Control. On PowerShell, encode a certificate without
-putting the password or certificate into Git:
-
-```powershell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes('.\iFlexVault-code-signing.pfx'))
-```
-
-The workflow writes the certificate only to the temporary GitHub Actions
-runner, signs the installer and portable executable, and fails before building
-if either secret is missing.
+Unsigned Windows packages can show a SmartScreen or Smart App Control warning
+depending on the computer's security settings. Authenticode signing can be
+added later without changing the application packaging configuration.
 
 ## Developer
 
