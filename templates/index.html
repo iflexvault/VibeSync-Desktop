@@ -22,7 +22,7 @@
     <meta property="og:url" content="https://github.com/iflexvault/VibeSync">
     <meta property="og:title" content="VibeSync - Connected Music">
     <meta property="og:description" content="VibeSync is a connected music experience by iFlexVault.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png">
+    <meta property="og:image" content="{{ url_for('static', filename='vibesync-logo.svg', _external=True) }}">
     <meta property="og:site_name" content="VibeSync">
 
     <!-- Twitter -->
@@ -30,18 +30,18 @@
     <meta name="twitter:url" content="https://github.com/iflexvault/VibeSync">
     <meta name="twitter:title" content="VibeSync - Connected Music">
     <meta name="twitter:description" content="VibeSync is a connected music experience by iFlexVault.">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png">
+    <meta name="twitter:image" content="{{ url_for('static', filename='vibesync-logo.svg', _external=True) }}">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://github.com/iflexvault/VibeSync">
 
     <!-- Apple Touch Icon & PWA tags -->
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='vibesync-logo.svg') }}">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="VibeSync">
 
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='vibesync-logo.svg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ range(1, 999999) | random }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -309,7 +309,7 @@
 
         <!-- Slide 1: Welcome -->
         <div class="onboarding-slide active" id="ob-slide-1">
-            <img src="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png" class="ob-icon" alt="VibeSync">
+            <img src="{{ url_for('static', filename='vibesync-logo.svg') }}" class="ob-icon" alt="VibeSync">
             <h1 class="ob-title">Just a moment...</h1>
             <p class="ob-text">We're getting things ready for you. Experience music like never before with the connected VibeSync desktop experience.</p>
             <button class="ob-btn" onclick="nextSlide(2)">Next</button>
@@ -494,7 +494,7 @@
             <!-- Subtle glow inside the card -->
             <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at center, rgba(29, 185, 84, 0.08) 0%, transparent 50%); pointer-events: none;"></div>
 
-            <img src="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png" alt="VibeSync" style="width: 88px; height: 88px; border-radius: 24px; margin-bottom: 24px; box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
+            <img src="{{ url_for('static', filename='vibesync-logo.svg') }}" alt="VibeSync" style="width: 88px; height: 88px; border-radius: 24px; margin-bottom: 24px; box-shadow: 0 15px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
             
             <h2 id="auth-title" style="color: #ffffff; margin: 0 0 10px 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Welcome to VibeSync</h2>
             <p id="auth-subtitle" style="color: rgba(255,255,255,0.6); margin: 0 0 30px 0; font-size: 15px; font-weight: 400;">Sign in to sync your library.</p>
@@ -637,7 +637,7 @@
                             <h3>Now Playing</h3>
                         </div>
                         <div class="np-image-container">
-                            <img id="rightPanelImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="skeleton" alt="Now Playing">
+                            <img id="rightPanelImage" src="{{ url_for('static', filename='vibesync-logo.svg') }}" class="skeleton" alt="VibeSync">
                         </div>
                         <div class="np-info">
                             <div class="np-title-row">
@@ -685,7 +685,7 @@
     <div class="floating-player-wrapper">
         <div class="floating-player" id="playerContainer">
             <div class="fp-left">
-                <img id="playerImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="skeleton" alt="Cover">
+                <img id="playerImage" src="{{ url_for('static', filename='vibesync-logo.svg') }}" class="skeleton" alt="VibeSync">
                 <div class="fp-info">
                     <div id="playerTitle" class="fp-title">No song</div>
                     <div id="playerArtist" class="fp-artist">Artist</div>
@@ -754,7 +754,7 @@
         <div class="lyrics-content-wrapper">
             
             <div class="lyrics-left-panel">
-                <img id="lyricsLeftCover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Album Cover">
+                <img id="lyricsLeftCover" src="{{ url_for('static', filename='vibesync-logo.svg') }}" alt="VibeSync">
                 <div id="lyricsLeftTitle">Song Title</div>
                 <div id="lyricsLeftArtist">Artist Name</div>
                 

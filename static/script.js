@@ -1,4 +1,4 @@
-﻿window.addEventListener('error', function(e) { if (e.target.tagName === 'IMG') { if (e.target.getAttribute('data-fallback-applied')) return; e.target.setAttribute('data-fallback-applied', 'true'); e.target.src = 'https://via.placeholder.com/150x150/080a10/ffffff?text=VibeSync'; } }, true);
+﻿window.addEventListener('error', function(e) { if (e.target.tagName === 'IMG') { if (e.target.getAttribute('data-fallback-applied')) return; e.target.setAttribute('data-fallback-applied', 'true'); e.target.src = '/static/vibesync-logo.svg'; } }, true);
 
 
 window.getClickableArtistsHtml = function(song) {
@@ -250,7 +250,7 @@ const formatNumber = (num) => {
 };
 
 const getHighestQualityImage = (images) => {
-    let url = 'https://via.placeholder.com/150';
+    let url = '/static/vibesync-logo.svg';
     if (!images) return url;
     if (typeof images === 'string') url = images;
     else if (Array.isArray(images) && images.length > 0) url = images[images.length - 1].url || images[images.length - 1].link || url;
@@ -1793,7 +1793,7 @@ async function renderSubscribedArtists() {
             html += `
             <div class="artist-card" onclick="window.location.hash='#artist/${id}'" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; width: 140px;">
                 <div class="card-img-wrapper" style="width: 140px; height: 140px; border-radius: 50%; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.1); margin-bottom: 12px;">
-                    <img src="${artist.image || 'https://via.placeholder.com/150'}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="${artist.image || '/static/vibesync-logo.svg'}" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <div class="card-title" style="text-align: center; font-size: 14px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${artist.name}</div>
                 <div class="card-subtitle" style="text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Artist</div>
@@ -1838,7 +1838,7 @@ async function renderSavedAlbums() {
             html += `
             <div class="album-card" onclick="window.location.hash='#album/${id}'" style="cursor: pointer; width: 140px;">
                 <div class="card-img-wrapper" style="width: 140px; height: 140px; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.1); margin-bottom: 12px;">
-                    <img src="${album.image || 'https://via.placeholder.com/150'}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img src="${album.image || '/static/vibesync-logo.svg'}" style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 <div class="card-title" style="font-size: 14px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${album.name}</div>
                 <div class="card-subtitle" style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">${album.artistName || 'Album'}</div>
@@ -2157,7 +2157,7 @@ async function renderSingleUserPlaylist(id) {
     
     if (pl.songs.length === 0) {
         
-        let fallbackHeroImg = 'https://via.placeholder.com/250x250/25d366/000000?text=Playlist';
+        let fallbackHeroImg = '/static/vibesync-logo.svg';
         routerView.innerHTML = `
             <div class="back-btn" onclick="window.location.hash='#playlists'" title="Go Back"><i class="fas fa-arrow-left"></i></div>
             <div class="hero-header">
@@ -2195,7 +2195,7 @@ async function renderSingleUserPlaylist(id) {
                         return `<img src="${getHighestQualityImage(img)}" class="stacked-thumb">`;
                     }).join('') + '</div>';
             } else {
-                heroImgHtml = `<img src="https://via.placeholder.com/250x250/25d366/000000?text=Playlist" class="hero-img" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">`;
+                heroImgHtml = `<img src="/static/vibesync-logo.svg" class="hero-img" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">`;
             }
 
             let html = `
@@ -2419,7 +2419,7 @@ async function renderSettingsAbout() {
             }
         </style>
         <div style="width: 100px; height: 100px; border-radius: 28px; background: #080a10; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; animation: logoPulse 2.5s infinite ease-in-out; overflow: hidden;">
-            <img src="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png" alt="VibeSync logo" style="width: 100%; height: 100%; object-fit: cover;">
+            <img src="/static/vibesync-logo.svg" alt="VibeSync logo" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
 
         <!-- App Name -->
@@ -2646,7 +2646,7 @@ window.renderNewReleases = async function() {
         
         if (data.success && data.data.length > 0) {
             data.data.forEach(album => {
-                const img = (album.image && album.image.length > 0) ? album.image[album.image.length-1].url : "https://via.placeholder.com/150";
+                const img = (album.image && album.image.length > 0) ? album.image[album.image.length-1].url : "/static/vibesync-logo.svg";
                 const artists = (album.artists && album.artists.primary) ? album.artists.primary.map(a=>a.name).join(", ") : "Unknown Artist";
                 const link = album.type === "single" ? `#album/${album.id}` : `#album/${album.id}`;
                 html += `

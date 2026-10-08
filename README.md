@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png" width="180" alt="VibeSync logo" />
+  <img src="static/vibesync-logo.svg" width="180" alt="VibeSync logo" />
 </p>
 
 <h1 align="center">VibeSync Desktop</h1>

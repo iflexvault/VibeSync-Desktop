@@ -38,7 +38,7 @@ def format_song(song):
     album_id = song.get("album", {}).get("id", "") if song.get("album") else ""
     
     thumbnails = song.get("thumbnails", [])
-    image_url = thumbnails[-1]["url"] if thumbnails else "https://via.placeholder.com/150"
+    image_url = thumbnails[-1]["url"] if thumbnails else "/static/vibesync-logo.svg"
     
     duration = song.get("duration_seconds")
     if not duration and song.get("duration"):
@@ -82,7 +82,7 @@ def format_artist(artist):
         "title": artist.get("artist", artist.get("name", "")),
         "subtitle": "Artist",
         "type": "artist",
-        "image": [{"quality": "500x500", "url": artist.get("thumbnails", [{"url": "https://via.placeholder.com/150"}])[-1]["url"] if artist.get("thumbnails") else "https://via.placeholder.com/150"}]
+        "image": [{"quality": "500x500", "url": artist.get("thumbnails", [{"url": "/static/vibesync-logo.svg"}])[-1]["url"] if artist.get("thumbnails") else "/static/vibesync-logo.svg"}]
     }
 
 def format_album(album):
@@ -99,7 +99,7 @@ def format_album(album):
         "title": album.get("title", ""),
         "subtitle": subtitle,
         "type": "album",
-        "image": [{"quality": "500x500", "url": album.get("thumbnails", [{"url": "https://via.placeholder.com/150"}])[-1]["url"] if album.get("thumbnails") else "https://via.placeholder.com/150"}]
+        "image": [{"quality": "500x500", "url": album.get("thumbnails", [{"url": "/static/vibesync-logo.svg"}])[-1]["url"] if album.get("thumbnails") else "/static/vibesync-logo.svg"}]
     }
 
 def format_playlist(playlist):
@@ -109,7 +109,7 @@ def format_playlist(playlist):
         "title": playlist.get("title", ""),
         "subtitle": playlist.get("author", "Playlist"),
         "type": "playlist",
-        "image": [{"quality": "500x500", "url": playlist.get("thumbnails", [{"url": "https://via.placeholder.com/150"}])[-1]["url"] if playlist.get("thumbnails") else "https://via.placeholder.com/150"}]
+        "image": [{"quality": "500x500", "url": playlist.get("thumbnails", [{"url": "/static/vibesync-logo.svg"}])[-1]["url"] if playlist.get("thumbnails") else "/static/vibesync-logo.svg"}]
     }
 
 def add_yt_routes(app, get_lyrics_fn):

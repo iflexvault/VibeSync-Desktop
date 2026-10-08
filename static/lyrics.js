@@ -293,7 +293,7 @@ function updateLeftPanel(song) {
     if (imgUrl) {
         imgUrl = imgUrl.replace(/=w\d+-h\d+.*/, '=w1080-h1080-l90-rj');
     }
-    document.getElementById('lyricsLeftCover').src = imgUrl || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+    document.getElementById('lyricsLeftCover').src = imgUrl || '/static/vibesync-logo.svg';
 }
 
 const lyricsProgress = document.getElementById('lyricsProgressBarContainer');

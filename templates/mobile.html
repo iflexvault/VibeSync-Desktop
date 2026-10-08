@@ -8,7 +8,7 @@
     <meta name="description" content="Step into the future of music with VibeSync. Seamless streaming, pure vibes, and a connected audio experience.">
     <meta name="theme-color" content="#ff1178">
     <!-- Icon for favicon and share file -->
-    <link rel="icon" href="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png" type="image/png">
+    <link rel="icon" href="{{ url_for('static', filename='vibesync-logo.svg') }}" type="image/svg+xml">
 
     <style>
         * {
@@ -1625,7 +1625,7 @@
         <div class="container">
             <div class="logo-container">
                 <div class="glowing-line"></div>
-                <img src="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png" class="app-logo" id="appLogo" alt="VibeSync Logo">
+                <img src="{{ url_for('static', filename='vibesync-logo.svg') }}" class="app-logo" id="appLogo" alt="VibeSync Logo">
             </div>
             <h1 class="hero-title">VibeSync</h1>
             <p class="hero-subtitle">Experience sound like never before. Immerse yourself in crystal-clear audio, personalized playlists, and intuitive controls designed for true music lovers.</p>
@@ -1672,7 +1672,7 @@
 
     <section><div class="container"><h2 class="features-title reveal">How to Install</h2><div class="install-steps"><div class="step reveal"><div class="step-number">1</div><div class="step-content"><h4>Download the APK</h4><p>Click the "Download APK" button above to download the VibeSync app file to your Android device.</p></div></div><div class="step reveal"><div class="step-number">2</div><div class="step-content"><h4>Enable Unknown Sources</h4><p>Go to Settings → Security → Unknown Sources and enable installation from unknown sources.</p></div></div><div class="step reveal"><div class="step-number">3</div><div class="step-content"><h4>Install the App</h4><p>Open the downloaded APK file from your notifications or file manager and tap "Install".</p></div></div><div class="step reveal"><div class="step-number">4</div><div class="step-content"><h4>Launch & Enjoy</h4><p>Open VibeSync from your app drawer and start enjoying a connected music experience!</p></div></div></div></div></section>
 
-    <section><div class="container"><h2 class="features-title reveal">App Preview</h2><div class="screenshot-section"><div class="screenshot-container reveal"><div class="screenshot-frame"><img src="https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png" alt="VibeSync Interface"></div><div class="screenshot-label"></div></div></div></div></section>
+    <section><div class="container"><h2 class="features-title reveal">App Preview</h2><div class="screenshot-section"><div class="screenshot-container reveal"><div class="screenshot-frame"><img src="{{ url_for('static', filename='vibesync-logo.svg') }}" alt="VibeSync Interface"></div><div class="screenshot-label"></div></div></div></div></section>
 
     <section id="developers"><div class="container"><h2 class="features-title reveal">Meet The Developer</h2><div class="dev-grid"><div class="card dev-card reveal"><div class="dev-header"><img src="https://github.com/iflexvault.png?size=512" class="dev-avatar" alt="iFlexVault"><div class="dev-info"><a href="https://github.com/iflexvault" target="_blank" rel="noopener noreferrer"><h3>iFlexVault</h3></a><div class="dev-role-container"><span class="dev-role">VibeSync Developer</span></div><div class="dev-bio">Building the connected VibeSync music experience across Android and desktop.</div></div></div><div class="dev-skills"><span class="skill-tag">Android</span><span class="skill-tag">Desktop</span><span class="skill-tag">Music</span><span class="skill-tag">Open Source</span></div></div></div></div></section>
 
@@ -1812,7 +1812,7 @@
         copyLinkBtn.addEventListener('click', () => { if(downloadBtn.href !== '#') navigator.clipboard.writeText(downloadBtn.href); showDownloadToastMsg("Link copied!"); });
 
         // ========== ENHANCED SHARE WITH ICON (sends both message and app icon) ==========
-        const appIconUrl = "https://raw.githubusercontent.com/iflexvault/VibeSync/main/assets/ic_launcher-playstore.png";
+        const appIconUrl = new URL("{{ url_for('static', filename='vibesync-logo.svg') }}", window.location.origin).toString();
 
         // Your exact requested share message with perfect formatting and emojis
         const shareMessage = `🎧 Step into the future of music ✨

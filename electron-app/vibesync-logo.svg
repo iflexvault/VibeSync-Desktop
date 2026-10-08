@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">VibeSync logo</title>
+  <rect width="512" height="512" fill="#080a10"/>
+  <g fill="#fff">
+    <path d="M20 116h61l82 150 90-145v85l-90 153z"/>
+    <path d="M270 62l178 105v47l-140-76v151l-38 46z"/>
+    <path d="M270 247c48 0 113 21 154 47 32 20 50 45 50 72 0 41-45 73-102 82-46 7-87-3-112-27l10-42c16 12 40 17 63 12 25-5 42-16 42-30 0-14-18-25-47-34l-58-19z"/>
+  </g>
+</svg>

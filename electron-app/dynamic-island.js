@@ -131,7 +131,12 @@ window.electronAPI.onTrackUpdated((data) => {
     expTitle.innerText = data.title;
     expArtist.innerText = data.artist || 'Unknown Artist';
     
-    const smallImg = data.image ? data.image.replace('w500-h500', 'w120-h120') : '';
+    const imageUrl = typeof data.image === 'string'
+        ? data.image
+        : Array.isArray(data.image)
+            ? data.image[data.image.length - 1]?.url
+            : data.image?.url;
+    const smallImg = imageUrl ? imageUrl.replace('w500-h500', 'w120-h120') : 'vibesync-logo.svg';
     minArt.src = smallImg;
     expArt.src = smallImg;
 
